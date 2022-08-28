@@ -166,7 +166,6 @@ async def inline_with_check(call: types.CallbackQuery):
     if await isAdmin(call.message):
         data = setMember(call.message)
         if data !=True:
-            # await call.answer('asasa', True)
             pr = await bot.get_chat(call.message.chat.id).p
             new_permissions = types.ChatPermissions(**pr)
             await bot.restrict_chat_member(call.message.chat.id, call.from_user.id, 
