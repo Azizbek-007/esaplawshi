@@ -93,8 +93,9 @@ def usercount(user_id, chat_id):
     try:
         return len(literal_eval(post_sql_query(sql)[0][0]))
     except: return 0
+    
 def tops(user_id, chat_id):
-    sql = f'SELECT json_array_length(new_user_id), user_id FROM members WHERE user_id = {user_id} AND group_id = {chat_id} ORDER BY json_array_length(new_user_id) DESC  LIMIT 10'
+    sql = f'SELECT json_array_length(new_user_id), user_id FROM members WHERE group_id = {chat_id} ORDER BY json_array_length(new_user_id) DESC  LIMIT 10'
     data = post_sql_query(sql)
     return data
 

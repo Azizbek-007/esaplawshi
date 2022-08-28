@@ -1,9 +1,10 @@
 import asyncio
 import math
 import time
-import requests
-from config.config import  dp, bot, bot_id, API_TOKEN
+from config.config import  dp, bot, bot_id
 from aiogram import types
+from aiogram.dispatcher.filters.builtin import CommandStart
+from filters.private_chat import IsPrivate
 
 # languages
 from lang.uz import lang
@@ -11,7 +12,7 @@ from lang.uz import lang
 # Keyboards
 from keyboard.Inline import start_btn, shareebtn, added_btn
 from database.connect import register_user, reg_group, group_setting, group_get_setting, new_member, usercount, members_clear, member_clear, \
-    tops, chan_off_on, botPr
+    tops, chan_off_on
 
 async def isAdmin(msg)->bool:
     bot_data = await bot.get_chat_member(msg.chat.id, bot_id)
@@ -21,13 +22,13 @@ async def isAdmin(msg)->bool:
 async def setMember(msg)->bool:
     data = group_get_setting(msg.chat.id)[0]
     c = usercount(msg.from_user.id, msg.chat.id)
-    if not data[2]: return True
+    print(data[2])
     if int(data[2]) <= c:
         return True
-    else: int(data[2]) - c
+    else: return False
 
 
-@dp.message_handler(commands=['start'], chat_type=types.ChatType.PRIVATE)
+@dp.message_handler(CommandStart(), IsPrivate())
 async def start(message: types.Message):
     first_name = message.from_user.first_name
     last_name = message.from_user.last_name
@@ -143,7 +144,7 @@ async def logika(message: types.Message):
         if await isAdmin(message) == True:
             await message.delete()
             for x in message.new_chat_members:
-                if x.is_bot == False:
+                if x.is_bot == False and x.id != message.from_user.id:
                     new_member(message.from_user.id, x.id, message.chat.id)
     except: pass
 
@@ -164,21 +165,24 @@ async def group_in_bot_data(message: types.ChatMemberUpdated):
 async def inline_with_check(call: types.CallbackQuery):
     print('keldi')
     if await isAdmin(call.message):
-        data = setMember(call.message)
-        if data !=True:
-            pr = await bot.get_chat(call.message.chat.id).p
-            new_permissions = types.ChatPermissions(**pr)
-            await bot.restrict_chat_member(call.message.chat.id, call.from_user.id, 
-                    permissions=new_permissions)
+        data = await setMember(call.message)
+        pr = await bot.get_chat(call.message.chat.id)
+        new_permissions = types.ChatPermissions(pr.permissions,)
+        print(new_permissions)
+        await bot.restrict_chat_member(call.message.chat.id, call.from_user.id, 
+                permissions=new_permissions)
 
 @dp.message_handler(content_types=types.ContentTypes.ANY)
 async def restrict_chat_member_coun(message: types.Message):
     dataGr = group_get_setting(message.chat.id)[0]
+    print('keldiddd')
     if dataGr[3] == "on":
         if message.from_user.is_bot:
             await message.delete()
+
     user = await bot.get_chat_member(message.chat.id, message.from_user.id)
-    if await isAdmin(message) and user.status == 'member':
+    print(user.status)
+    if await isAdmin(message) and user.status == 'restricted' or user.status == 'member':
         data = await setMember(message)
         if data != True: 
             await message.delete()
