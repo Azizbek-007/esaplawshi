@@ -5,7 +5,7 @@ from filters.isMember import IsMember
 from filters.setMember import SetMember
 from lang.uz import lang
 from database.connect import group_get_setting, usercount
-from keyboard.Inline import  added_btn
+from keyboard.Inline import  added_btn, shareebtn
 from aiogram.dispatcher import FSMContext
 import math
 import asyncio
@@ -35,7 +35,7 @@ async def chan_on_off(message: types.Message, state: FSMContext):
         if message.from_user.is_bot:
             await message.delete()
 
-
+    me = await bot.get_me()
     text = lang.get('rek_no').format(message.from_user.id, message.from_user.first_name)
     for entity in message.entities:
         if entity.type in ["url", "text_link", "mention"]:
@@ -43,7 +43,7 @@ async def chan_on_off(message: types.Message, state: FSMContext):
             try: await bot.delete_message(message.chat.id, user_data['mid'])
             except: pass
             await bot.delete_message(message.chat.id, message.message_id)
-            a = await message.answer(text, 'html')
+            a = await message.answer(text, 'html', reply_markup=shareebtn(me.username))
             return await state.update_data(mid=a.message_id)
 
     for entity in message.caption_entities:
@@ -52,19 +52,20 @@ async def chan_on_off(message: types.Message, state: FSMContext):
             try: await bot.delete_message(message.chat.id, user_data['mid'])
             except: pass
             await bot.delete_message(message.chat.id, message.message_id)
-            a = await message.answer(text, 'html')
+            a = await message.answer(text, 'html', reply_markup=shareebtn(me.username))
             return await state.update_data(mid=a.message_id)
 
 @dp.edited_message_handler(IsAdmin(), IsMember())
 async def msg_handler(message: types.Message, state: FSMContext):
     text = lang.get('rek_no').format(message.from_user.id, message.from_user.first_name)
+    me = await bot.get_me()
     for entity in message.entities:
         if entity.type in ["url", "text_link", "mention"]:
             user_data = await state.get_data()
             try: await bot.delete_message(message.chat.id, user_data['mid'])
             except: pass
             await bot.delete_message(message.chat.id, message.message_id)
-            a = await message.answer(text, 'html')
+            a = await message.answer(text, 'html', reply_markup=shareebtn(me.username))
             return await state.update_data(mid=a.message_id)
 
     for entity in message.caption_entities:
@@ -73,5 +74,5 @@ async def msg_handler(message: types.Message, state: FSMContext):
             try: await bot.delete_message(message.chat.id, user_data['mid'])
             except: pass
             await bot.delete_message(message.chat.id, message.message_id)
-            a = await message.answer(text, 'html')
+            a = await message.answer(text, 'html', reply_markup=shareebtn(me.username))
             return await state.update_data(mid=a.message_id)

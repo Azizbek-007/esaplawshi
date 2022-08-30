@@ -16,3 +16,9 @@ async def help(message: types.Message, state: FSMContext):
             text = lang.get('help')
             a = await message.answer(text, reply_markup=start_btn(me.username))
             await state.update_data(mid=a.message_id)
+
+@dp.message_handler(commands=['help'], chat_type=types.ChatType.PRIVATE)
+async def help(message: types.Message, state: FSMContext):
+    me = await bot.get_me()
+    text = lang.get('help')
+    await message.reply(text, reply_markup=start_btn(me.username))

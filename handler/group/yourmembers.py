@@ -16,3 +16,9 @@ async def yourmembers(message: types.Message):
     else:
         text = lang.get('rno_add').format(message.reply_to_message.from_user.id, message.reply_to_message.from_user.first_name)
         await message.answer(text, 'html', reply_markup=shareebtn(me.username))
+
+@dp.message_handler(IsAdmin(), is_reply=False, commands=['yourmembers'])
+async def warning(message: types.Message):
+    await message.delete()
+    text = lang.get('no_rep')
+    await message.answer(text, 'html')

@@ -30,9 +30,9 @@ _____
 _____
 /add off  - majburiy odam qo'shishni o'chirib qoyish uchun!
 
-/chanoff 
+/chanoff - Kanal nomidan yozish cheklandi!
 
-/chanon''',
+/chanon - Kanal nomidan yozishga ruxsat berildi!''',
     'bot_join':'''📊Men Guruhga kim qancha odam qo'shganligini aytib beruvchi botman. 
 
 Bot orqali Guruhingizga istagancha odam yigʻib olasiz vedio qoʻllanmada koʻrsatilgan Botni ishlatish. 
