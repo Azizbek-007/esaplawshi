@@ -5,9 +5,11 @@ from database.connect import group_get_setting, usercount
 class SetMember(BoundFilter):
 
     async def check(self, msg: types.Message):
-        data = group_get_setting(msg.chat.id)[0]
+        try:
+            data = group_get_setting(msg.chat.id)[0][2]
+        except: data == 0
         c = usercount(msg.from_user.id, msg.chat.id)
-        if data[2] == 0: return False
-        if int(data[2]) <= c:
+        if data == 0: return False
+        if int(data) <= c:
             return False
         else: return True

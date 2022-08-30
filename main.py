@@ -7,7 +7,7 @@ async def on_startup(dp):
         from handler.group import help, mymembers, yourmembers, \
                 top, delson, clear, add, new_left_chat_member, my_chat_member, any
         from handler.group.callback import check
-        from handler.admin import admin
+        from handler.admin import admin, send_users, cancel, send_groups
         from handler.user import start
         await set_default_commands(dp)
 
@@ -18,5 +18,6 @@ if __name__ == '__main__':
                 'message', 
                 'chat_member', 
                 'my_chat_member', 
-                'callback_query'
+                'callback_query',
+                'edited_message'
                 ],  on_startup=on_startup)

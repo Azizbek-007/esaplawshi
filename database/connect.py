@@ -34,7 +34,8 @@ def create_groups():
 	"id"	INTEGER,
 	"group_id"	TEXT,
 	"add"	INTEGER,
-    "lan"	TEXT,
+	"lan"	TEXT,
+	"status"	INTEGER,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );''' 
     post_sql_query(sql)
@@ -64,8 +65,8 @@ def register_user(user, username, first_name, last_name):
 def reg_group(chat_id):
     sql = f"SELECT * FROM `groups` WHERE group_id = '{chat_id}'"
     res = post_sql_query(sql)
-    if not res:
-        sql = f"INSERT INTO `groups`(group_id, add) VALUES ({chat_id}, '0')"
+    if len(res) == 0:
+        sql = f"INSERT INTO `groups`('group_id', 'add', 'status') VALUES ('{chat_id}', '0', '1')"
         post_sql_query(sql)
 
 def group_setting(chat_id, son):
@@ -126,4 +127,17 @@ def botPr(chat_id, API_TOKEN):
     return y
 
 def users_id():
-    pass
+    sql = "SELECT user_id, status FROM USERS WHERE status=1"
+    return post_sql_query(sql)
+
+def user_status_up(user_id):
+    sql = f"UPDATE USERS SET status=0 WHERE user_id={user_id}"
+    post_sql_query(sql)
+
+def groups_id():
+    sql = "SELECT group_id, status FROM groups WHERE status=1"
+    return post_sql_query(sql)
+
+def group_status_up(group_id):
+    sql = f"UPDATE groups SET status=0 WHERE group_id={group_id}"
+    post_sql_query(sql)
