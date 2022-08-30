@@ -14,7 +14,7 @@ def shareebtn(bot_user):
     markup.add(btn)
     return markup  
 
-def added_btn():
+def added_btn(user_id):
     markup = InlineKeyboardMarkup()
-    btn = InlineKeyboardButton("✅ Odam qo'shdim", callback_data='member_added')
+    btn = InlineKeyboardButton("✅ Odam qo'shdim", callback_data=f'member_added={user_id}')
     return markup.add(btn) 

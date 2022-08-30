@@ -6,6 +6,7 @@ from filters.setMember import SetMember
 from lang.uz import lang
 from database.connect import group_get_setting, usercount
 from keyboard.Inline import  added_btn
+from aiogram.dispatcher import FSMContext
 import math
 import asyncio
 import time
@@ -19,7 +20,7 @@ async def restrict_chat_member_coun(message: types.Message):
             await message.delete()
             number = int(dataGr[2])-int(usercount(message.from_user.id, message.chat.id))
             text = lang.get('adam_qos').format(message.from_user.id, message.from_user.first_name, f"{number}")
-            a = await bot.send_message(message.chat.id, text, 'html', reply_markup=added_btn())
+            a = await bot.send_message(message.chat.id, text, 'html', reply_markup=added_btn(message.from_user.id))
             await bot.restrict_chat_member(message.chat.id, message.from_user.id,
                                         until_date=math.floor(time.time()) + 5*60,
                                         permissions=types.ChatPermissions(can_send_messages=False, can_invite_users=True))
@@ -28,25 +29,49 @@ async def restrict_chat_member_coun(message: types.Message):
     except: pass
 
 @dp.message_handler(IsAdmin(), IsMember(), content_types=types.ContentTypes.ANY)
-async def chan_on_off(message: types.Message):
+async def chan_on_off(message: types.Message, state: FSMContext):
     dataGr = group_get_setting(message.chat.id)[0]
     if dataGr[3] == "on":
         if message.from_user.is_bot:
             await message.delete()
-    try:
-        try: x = message.entities[0].type
-        except: x = message.caption_entities[0].type
-    except: x = "Null"
-    
-    if x == 'mention' or x == 'url':
-        await message.delete()
-            
+
+
+    text = lang.get('rek_no').format(message.from_user.id, message.from_user.first_name)
+    for entity in message.entities:
+        if entity.type in ["url", "text_link", "mention"]:
+            user_data = await state.get_data()
+            try: await bot.delete_message(message.chat.id, user_data['mid'])
+            except: pass
+            await bot.delete_message(message.chat.id, message.message_id)
+            a = await message.answer(text, 'html')
+            return await state.update_data(mid=a.message_id)
+
+    for entity in message.caption_entities:
+        if entity.type in ["url", "text_link", "mention"]:
+            user_data = await state.get_data()
+            try: await bot.delete_message(message.chat.id, user_data['mid'])
+            except: pass
+            await bot.delete_message(message.chat.id, message.message_id)
+            a = await message.answer(text, 'html')
+            return await state.update_data(mid=a.message_id)
 
 @dp.edited_message_handler(IsAdmin(), IsMember())
-async def msg_handler(message: types.Message):
-    try:
-        try: x = message.entities[0].type
-        except: x = message.caption_entities[0].type
-    except: x = "Null"
-    if x == 'mention' or x == 'url':
-        await message.delete()
+async def msg_handler(message: types.Message, state: FSMContext):
+    text = lang.get('rek_no').format(message.from_user.id, message.from_user.first_name)
+    for entity in message.entities:
+        if entity.type in ["url", "text_link", "mention"]:
+            user_data = await state.get_data()
+            try: await bot.delete_message(message.chat.id, user_data['mid'])
+            except: pass
+            await bot.delete_message(message.chat.id, message.message_id)
+            a = await message.answer(text, 'html')
+            return await state.update_data(mid=a.message_id)
+
+    for entity in message.caption_entities:
+        if entity.type in ["url", "text_link", "mention"]:
+            user_data = await state.get_data()
+            try: await bot.delete_message(message.chat.id, user_data['mid'])
+            except: pass
+            await bot.delete_message(message.chat.id, message.message_id)
+            a = await message.answer(text, 'html')
+            return await state.update_data(mid=a.message_id)

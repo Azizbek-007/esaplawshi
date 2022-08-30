@@ -61,5 +61,8 @@ Bot orqali Guruhingizga istagancha odam yigʻib olasiz vedio qoʻllanmada koʻrs
     'noadminbot':"<a href='tg://user?id={}'>{}</a> <b>Ushbu buyruqdan foydalanish uchun botni guruhga to'liq admin qilishingiz kerak!</b>",
     'xadd': "Xato!\n\nNamuna: <code>/add 10</code>",
     'supGR':'Bot faqat "SUPERGROUP"da ishlaydi',
-    'tarif_off': 'Majburiy azo qoshish o\'chirildi'
+    'tarif_off': 'Majburiy azo qoshish o\'chirildi',
+    "rek_no": "<a href='tg://user?id={}'>{}</a> Reklama tarqatmang!",
+    "chanoff": "Kanal nomidan yozish cheklandi!",
+    "chanon": "Kanal nomidan yozishga ruxsat berildi!"
 }

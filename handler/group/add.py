@@ -15,7 +15,8 @@ async def add_member_for_per(message: types.Message):
     try:
         son =int(message.text.split("/add ")[1])
         group_setting(message.chat.id, son)
-        await message.answer(son)
+        text = lang.get('instaled_tar').format(message.chat.title, son)
+        await message.answer(son, 'html')
     except ValueError:
         text = lang.get('xadd')
         await message.answer(text, 'html')
