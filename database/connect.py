@@ -15,12 +15,15 @@ def post_sql_query(sql_query):
 
 
 def create_tables():
-    users_query = '''CREATE TABLE IF NOT EXISTS USERS
-                        (user_id INTEGER PRIMARY KEY NOT NULL,
-                        username TEXT,
-                        first_name TEXT,
-                        last_name TEXT,
-                        reg_date TEXT);'''
+    users_query = '''CREATE TABLE "USERS" (
+	"user_id"	INTEGER NOT NULL,
+	"username"	TEXT,
+	"first_name"	TEXT,
+	"last_name"	TEXT,
+	"reg_date"	TEXT,
+	"status"	INTEGER,
+	PRIMARY KEY("user_id")
+);'''
 
     post_sql_query(users_query)
 
@@ -54,15 +57,15 @@ def register_user(user, username, first_name, last_name):
     user_check_query = f'SELECT * FROM USERS WHERE user_id = {user};'
     user_check_data = post_sql_query(user_check_query)
     if not user_check_data:
-        insert_to_db_query = f'INSERT INTO USERS (user_id, username, first_name,  last_name, reg_date) VALUES ' \
-                             f'({user}, "{username}", "{first_name}", "{last_name}", "{ctime()}");'
+        insert_to_db_query = f'INSERT INTO USERS (user_id, username, first_name,  last_name, reg_date, status) VALUES ' \
+                             f'({user}, "{username}", "{first_name}", "{last_name}", "{ctime()}", 1);'
         post_sql_query(insert_to_db_query)
 
 def reg_group(chat_id):
     sql = f"SELECT * FROM `groups` WHERE group_id = '{chat_id}'"
     res = post_sql_query(sql)
     if not res:
-        sql = f"INSERT INTO `groups`(group_id) VALUES ({chat_id})"
+        sql = f"INSERT INTO `groups`(group_id, add) VALUES ({chat_id}, '0')"
         post_sql_query(sql)
 
 def group_setting(chat_id, son):
@@ -111,7 +114,16 @@ def chan_off_on(chat_id, lan):
     sql = f"UPDATE groups SET  lan = '{lan}' WHERE group_id = '{chat_id}'"
     post_sql_query(sql)
 
+def cnumber(chat_id, user_id):
+    ucount = int(usercount(user_id, chat_id))
+    print(ucount)
+    chat = group_get_setting(chat_id)[0][2]
+    return int(chat) - int(ucount)
+
 def botPr(chat_id, API_TOKEN):
     x = requests.get(f'https://api.telegram.org/bot{API_TOKEN}/getChat?chat_id={chat_id}')
     y = x.json()['result']['permissions']
     return y
+
+def users_id():
+    pass
