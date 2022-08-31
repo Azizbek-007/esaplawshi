@@ -10,6 +10,6 @@ from keyboard.Inline import shareebtn
 async def chanoff(message: types.Message):
     await message.delete()
     chan_off_on(message.chat.id, 'on')
-    text = lang.get('chanoff')
+    text = lang.get('chanon')
     me = await bot.get_me()
     await message.answer(text, reply_markup=shareebtn(me.username))

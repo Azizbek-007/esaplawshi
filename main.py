@@ -5,7 +5,7 @@ logging.basicConfig(level=logging.INFO)
 
 async def on_startup(dp):
         from handler.group import help, mymembers, yourmembers, \
-                top, delson, clear, add, new_left_chat_member, my_chat_member, any, chanon, chanoff
+                any, top, delson, clear, add, new_left_chat_member, my_chat_member, chanon, chanoff
         from handler.group.callback import check
         from handler.admin import admin, send_users, cancel, send_groups
         from handler.user import start

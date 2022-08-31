@@ -15,6 +15,11 @@ import time
 async def restrict_chat_member_coun(message: types.Message):
     try:
         dataGr = group_get_setting(message.chat.id)[0]
+        print(dataGr[3])
+        if dataGr[3] == "off":
+            if message.sender_chat:
+                await message.delete()
+        dataGr = group_get_setting(message.chat.id)[0]
         user = await bot.get_chat_member(message.chat.id, message.from_user.id)
         if user.status == 'restricted' or user.status == 'member':
             await message.delete()
@@ -28,13 +33,10 @@ async def restrict_chat_member_coun(message: types.Message):
             await a.delete()
     except: pass
 
+
+            
 @dp.message_handler(IsAdmin(), IsMember(), content_types=types.ContentTypes.ANY)
 async def chan_on_off(message: types.Message, state: FSMContext):
-    dataGr = group_get_setting(message.chat.id)[0]
-    if dataGr[3] == "on":
-        if message.from_user.is_bot:
-            await message.delete()
-
     me = await bot.get_me()
     text = lang.get('rek_no').format(message.from_user.id, message.from_user.first_name)
     for entity in message.entities:
