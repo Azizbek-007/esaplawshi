@@ -11,4 +11,5 @@ async def chanoff(message: types.Message):
     chan_off_on(message.chat.id, 'off')
     text = lang.get('chanoff')
     me = await bot.get_me()
-    await message.answer(text, reply_markup=shareebtn(me.username))
+    await message.answer(text, reply_markup=shareebtn(me.username)) 
+    
