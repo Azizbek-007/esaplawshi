@@ -11,6 +11,7 @@ import math
 import asyncio
 import time
 
+@dp.throttled(rate=1)
 @dp.message_handler(IsAdmin(), SetMember(), content_types=types.ContentTypes.ANY)
 async def restrict_chat_member_coun(message: types.Message):
     try:
@@ -34,7 +35,7 @@ async def restrict_chat_member_coun(message: types.Message):
     except: pass
 
 
-            
+@dp.throttled(rate=1)
 @dp.message_handler(IsAdmin(), IsMember(), content_types=types.ContentTypes.ANY)
 async def chan_on_off(message: types.Message, state: FSMContext):
     me = await bot.get_me()
@@ -56,7 +57,8 @@ async def chan_on_off(message: types.Message, state: FSMContext):
             await bot.delete_message(message.chat.id, message.message_id)
             a = await message.answer(text, 'html', reply_markup=shareebtn(me.username))
             return await state.update_data(mid=a.message_id)
-
+            
+@dp.throttled(rate=1)
 @dp.edited_message_handler(IsAdmin(), IsMember())
 async def msg_handler(message: types.Message, state: FSMContext):
     text = lang.get('rek_no').format(message.from_user.id, message.from_user.first_name)

@@ -14,8 +14,8 @@ async def top(message: types.Message):
             for x in data:
                 userdata = await bot.get_chat_member(message.chat.id, x[1])
                 txt +=f"\n<b>{i}.</b> <a href='tg://user?id={x[1]}'>{userdata.user.first_name}</a>-{x[0]}"
+                i = i + 1
             text = lang.get('top').format(message.chat.title, txt)
-            i = i + 1
             me = await bot.get_me()
             await message.answer(text, 'html', reply_markup=shareebtn(me.username))
         else:

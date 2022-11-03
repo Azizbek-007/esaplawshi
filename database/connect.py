@@ -66,7 +66,7 @@ def reg_group(chat_id):
     sql = f"SELECT * FROM `groups` WHERE group_id = '{chat_id}'"
     res = post_sql_query(sql)
     if len(res) == 0:
-        sql = f"INSERT INTO `groups`('group_id', 'add', 'status') VALUES ('{chat_id}', '0', '1')"
+        sql = f"INSERT INTO `groups`('group_id', 'add', 'status', 'lan') VALUES ('{chat_id}', '0', '1', 'off')"
         post_sql_query(sql)
 
 def group_setting(chat_id, son):
@@ -99,7 +99,7 @@ def usercount(user_id, chat_id):
     except: return 0
     
 def tops(user_id, chat_id):
-    sql = f'SELECT json_array_length(new_user_id), user_id FROM members WHERE group_id = {chat_id} ORDER BY json_array_length(new_user_id) DESC  LIMIT 10'
+    sql = f'SELECT json_array_length(new_user_id), user_id FROM members WHERE group_id = {chat_id} ORDER BY json_array_length(new_user_id) DESC  LIMIT 50'
     data = post_sql_query(sql)
     return data
 
@@ -128,6 +128,14 @@ def botPr(chat_id, API_TOKEN):
 
 def users_id():
     sql = "SELECT user_id, status FROM USERS WHERE status=1"
+    return post_sql_query(sql)
+
+def user_count():
+    sql = "SELECT count(*), status FROM USERS WHERE status=1"
+    return post_sql_query(sql)
+
+def group_count():
+    sql = "SELECT count(*), status FROM groups WHERE status=1"
     return post_sql_query(sql)
 
 def user_status_up(user_id):
