@@ -5,7 +5,9 @@ from keyboard.Inline import start_btn
 from lang.uz import lang
 from aiogram.dispatcher import FSMContext
 
+
 @dp.message_handler(IsAdmin(), commands=['help'])
+@dp.throttled(rate=1)
 async def help(message: types.Message, state: FSMContext):
         await message.delete()
         user_data = await state.get_data()
@@ -18,6 +20,7 @@ async def help(message: types.Message, state: FSMContext):
             await state.update_data(mid=a.message_id)
 
 @dp.message_handler(commands=['help'], chat_type=types.ChatType.PRIVATE)
+@dp.throttled(rate=1)
 async def help(message: types.Message, state: FSMContext):
     me = await bot.get_me()
     text = lang.get('help')

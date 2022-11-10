@@ -11,7 +11,7 @@ import math
 import asyncio
 import time
 
-@dp.throttled(rate=1)
+
 @dp.message_handler(IsAdmin(), SetMember(), content_types=types.ContentTypes.ANY)
 async def restrict_chat_member_coun(message: types.Message):
     try:
@@ -35,7 +35,7 @@ async def restrict_chat_member_coun(message: types.Message):
     except: pass
 
 
-@dp.throttled(rate=1)
+
 @dp.message_handler(IsAdmin(), IsMember(), content_types=types.ContentTypes.ANY)
 async def chan_on_off(message: types.Message, state: FSMContext):
     me = await bot.get_me()

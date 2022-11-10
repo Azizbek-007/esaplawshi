@@ -5,7 +5,9 @@ from lang.uz import lang
 from database.connect import usercount 
 from keyboard.Inline import shareebtn
 
+
 @dp.message_handler(IsAdmin(), commands=['mymembers'])
+@dp.throttled(rate=1)
 async def mymembers(message: types.Message):
     await message.delete()
     c = int(usercount(message.from_user.id, message.chat.id))
